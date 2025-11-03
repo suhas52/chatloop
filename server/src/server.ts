@@ -1,14 +1,18 @@
-const express = require('express');
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import { authRouter } from './routes/authRoutes.ts';
+dotenv.config();
+
 const app = express();
-require('dotenv').config()
-const cors = require('cors');
-const PORT:number = Number(process.env.EXPRESS_PORT ?? 3000);
+
+const PORT: number = Number(process.env.EXPRESS_PORT ?? 3000);
 
 app.use(cors());
 app.use(express.json());
-
+app.use("/api/auth", authRouter)
 
 
 app.listen(PORT, () => {
-    console.log("The server was started on port: ", PORT)
+    console.log("The server was started on port: ", PORT);
 })
