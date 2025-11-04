@@ -17,7 +17,7 @@ authRouter.post("/login", async (req, res) => {
     if (user_id) {
         const token = jwt.sign({user_id: user_id, username: username}, JWT_SECRET);
         res.status(200).
-        cookie("jwt", token, {
+        cookie("token", token, {
             httpOnly: true,
             maxAge: 1000 * 60 * 60 * 24
         })

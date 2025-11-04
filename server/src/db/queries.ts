@@ -21,3 +21,8 @@ export const loginUser = async (username: string, password: string) => {
     const match = await bcrypt.compare(password, hashed_password)
     if (match) return user_id; else return null;
 }
+
+export const getUser = async (user_id: string) => {
+    const result = await pool.query("SELECT user_id, username, created_at FROM users");
+    return result.rows[0];
+}
