@@ -26,3 +26,15 @@ export const getUser = async (user_id: string) => {
     const result = await pool.query("SELECT user_id, username, created_at FROM users");
     return result.rows[0];
 }
+
+export const getConversations = async (user_id: string) => {
+    const result = await pool.query("SELECT c.conversation_id, c.user1, c.user2, u_sender.username AS user1_username, u_reciever.username AS user2_username FROM conversations c JOIN  users u_sender ON c.user1 = u_sender.user_id JOIN users u_reciever ON c.user2 = u_reciever.user_id WHERE  u_sender.user_id = ($1)", [user_id]);
+    const conversations = result.rows;
+    console.log(conversations)
+}
+
+export const getMessages = async (conversation_id: string) => {
+    const result = await pool.query("SELECT msg_id, msg, sent_at, status,sender_id, receiver_id FROM messages WHERE conversation_id = $1", [conversation_id]);
+    const messages = result.rows;
+    console.log(messages)
+}

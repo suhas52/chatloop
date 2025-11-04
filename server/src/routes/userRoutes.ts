@@ -1,7 +1,7 @@
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../auth/auth.ts';
-import { getUser } from '../db/queries.ts';
+import { getConversations, getMessages, getUser } from '../db/queries.ts';
 
 
 export const userRouter = express.Router();
@@ -10,6 +10,10 @@ userRouter.get("/me", verifyToken, async (req: any, res: Response) => {
     console.log(user)
 })
 
-userRouter.get("/conversations", verifyToken, async (req: any, res: Response) => {
-    
+userRouter.get("/conversations/:id ", verifyToken, async (req: any, res: Response) => {
+    getConversations(req.params.id)
+})
+
+userRouter.get("/messages/:id", verifyToken, async (req: any, res: Response) => {
+    getMessages(req.params.id)
 })

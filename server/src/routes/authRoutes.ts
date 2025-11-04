@@ -9,6 +9,7 @@ const JWT_SECRET: string = String(process.env.JWT_SECRET);
 authRouter.post("/register", (req, res) => {
     const {username, password, first_name, last_name} = req.body;
     registerUser(username, password, first_name.charAt(0).toUpperCase() + first_name.slice(1), last_name.charAt(0).toUpperCase() + last_name.slice(1));
+    res.status(201).json({success: "User added"})
 })
 
 authRouter.post("/login", async (req, res) => {
