@@ -10,7 +10,7 @@ userRouter.get("/me", verifyToken, async (req: any, res: Response) => {
     console.log(user)
 })
 
-userRouter.get("/conversations/:id ", verifyToken, async (req: any, res: Response) => {
+userRouter.get("/conversations/:id", verifyToken, async (req: any, res: Response) => {
     getConversations(req.params.id)
 })
 
