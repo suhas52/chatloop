@@ -2,8 +2,6 @@ import bcrypt from 'bcryptjs'
 import { PrismaClient } from '../generated/prisma/index.js';
 const prisma = new PrismaClient();
 const SALT = 10;
-
-
 import dotenv from 'dotenv'
 dotenv.config();
 
@@ -51,8 +49,18 @@ export const getUser = async (user_id: string) => {
     });
 }
 
+export const getAllUsers = async () => {
+    const users = await prisma.users.findMany({
+        select: {
+            first_name: true,
+            last_name: true,
+            username: true
+        }
+    })
+    return users;
+}
+
 export const getConversations = async (user_id: string) => {
-    console.log(user_id)
     const conversations = await prisma.conversations.findMany({
         where: {
             user1: user_id,
@@ -100,4 +108,31 @@ export const getMessages = async (conversation_id: string) => {
         }
     })
     console.log(messages)
+}
+
+export const startNewConversation = async (userA: string, userB: string) => {
+    const exists = await prisma.conversations.findFirst({
+        where: {
+            OR: [
+                { user1: userA, user2: userB },
+                { user1: userB, user2: userA },
+            ],
+        },
+    });
+    if (!exists) {
+        const conversation = {
+            user1: userA, user2: userB
+        }
+        await prisma.conversations.create({ data: conversation})
+    }
+}
+
+export const sendMessage = async (msg: string, conversation_id: string, sender_id: string, receiver_id: string) => {
+    const message = {
+        msg,
+        conversation_id,
+        sender_id,
+        receiver_id
+    }
+    await prisma.messages.create({ data: message})
 }
