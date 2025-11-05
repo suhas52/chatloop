@@ -73,7 +73,15 @@ export const getConversations = async (user_id: string) => {
             },
         },
     });
-    console.log(conversations)
+    const flattened = conversations.map(conv => ({
+        conversation_id: conv.conversation_id,
+        user1: conv.user1,
+        user2: conv.user2,
+        user1_username: conv.users_conversations_user1Tousers?.username ?? null,
+        user2_username: conv.users_conversations_user2Tousers?.username ?? null,
+    }));
+    
+    console.log(flattened);
     
 }
 
