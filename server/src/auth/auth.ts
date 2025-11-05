@@ -8,7 +8,7 @@ const JWT_SECRET: string = String(process.env.JWT_SECRET);
 export function verifyToken(req: Request & { user?: Object }, res: Response , next: NextFunction) {
     const token = req.cookies.token;
     if (!token) return res.status(401).json({message: "Unauthorized"});
-
+    
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
         req.user = decoded;

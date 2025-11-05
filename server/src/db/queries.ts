@@ -89,7 +89,7 @@ export const getConversations = async (user_id: string) => {
         user2_username: conv.users_conversations_user2Tousers?.username ?? null,
     }));
     
-    console.log(flattened);
+    return flattened;
     
 }
 
@@ -107,7 +107,7 @@ export const getMessages = async (conversation_id: string) => {
             receiver_id: true
         }
     })
-    console.log(messages)
+    return messages
 }
 
 export const startNewConversation = async (userA: string, userB: string) => {

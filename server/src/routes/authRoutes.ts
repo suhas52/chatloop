@@ -6,10 +6,10 @@ dotenv.config();
 import jwt from 'jsonwebtoken'
 const JWT_SECRET: string = String(process.env.JWT_SECRET);
 
-authRouter.post("/register", (req, res) => {
+authRouter.post("/register", async (req, res) => {
     const {username, password, first_name, last_name} = req.body;
     try {
-        registerUser(username, password, first_name.charAt(0).toUpperCase() + first_name.slice(1), last_name.charAt(0).toUpperCase() + last_name.slice(1));
+        await registerUser(username, password, first_name.charAt(0).toUpperCase() + first_name.slice(1), last_name.charAt(0).toUpperCase() + last_name.slice(1));
         res.status(201).json({message: "User added"})
     } catch (err) {
         console.log(err);
