@@ -13,9 +13,15 @@ dotenv.config();
 const app = express();
 const PORT: number = Number(process.env.EXPRESS_PORT ?? 3000);
 
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:5173',  // frontend origin
+  credentials: true,                // allow cookies, auth headers
+  optionsSuccessStatus: 200
+};
+
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors(corsOptions));
 app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
 
@@ -24,7 +30,8 @@ const server = http.createServer(app);
 
 const io = new SocketIOServer(server, {
   cors: {
-    origin: '*',
+    origin: 'http://localhost:5173',
+    credentials: true,
     methods: ["GET", "POST"]
   }
 });

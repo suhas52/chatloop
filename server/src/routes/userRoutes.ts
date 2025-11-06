@@ -2,7 +2,6 @@ import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../auth/auth.ts';
 import { getAllUsers, getConversations, getMessages, getUser, startNewConversation } from '../db/queries.ts';
-import { start } from 'repl';
 
 
 export const userRouter = express.Router();
@@ -27,9 +26,9 @@ userRouter.get("/conversations/:id", verifyToken, async (req: any, res: Response
     }
 })
 
-userRouter.get("/messages/:id", verifyToken, async (req: any, res: Response) => {
+userRouter.get("/messages/:id/:cursor", verifyToken, async (req: any, res: Response) => {
     try { 
-        const messages = await getMessages(req.params.id)
+        const messages = await getMessages(req.params.id, req.params.cursor)
         res.status(200).json(messages)
     } catch (err) {
         console.log(err);

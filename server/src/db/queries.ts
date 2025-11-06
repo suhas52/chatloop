@@ -93,11 +93,14 @@ export const getConversations = async (user_id: string) => {
     
 }
 
-export const getMessages = async (conversation_id: string) => {
+export const getMessages = async (conversation_id: string, myCursor: Date) => {
     const messages = await prisma.messages.findMany({
         where: {
-            conversation_id: conversation_id
+            conversation_id,
+            sent_at: { lt: myCursor },
         },
+        orderBy: { sent_at: 'desc' },
+        take: 10,
         select: {
             msg_id: true,
             msg: true,
