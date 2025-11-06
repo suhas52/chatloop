@@ -1,6 +1,7 @@
 
 import { useContext } from "react";
 import { UserContext } from "./userContext";
+import CurrentConversations from "./conversations";
 
 
 
@@ -11,7 +12,7 @@ function Home() {
     const { user } = context;
 
     return (
-        <></>
+        <CurrentConversations />
     )
 }
 
