@@ -11,7 +11,7 @@ function Home() {
     const { user } = context;
 
     return (
-        <>{user?.username}</>
+        <></>
     )
 }
 

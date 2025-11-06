@@ -21,7 +21,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const pages = ['Users', "Notifications"];
+const pages = ['users', "notifications"];
 const settings = ['Profile', 'Account', 'Logout'];
 const BACKEND_URL = "http://localhost"
 const BACKEND_PORT = 3000
@@ -112,7 +112,7 @@ function ResponsiveAppBar() {
         sx={{ display: { xs: 'block', md: 'none' } }}
         >
         {pages.map((page) => (
-            <MenuItem key={page} onClick={handleCloseNavMenu}>
+            <MenuItem key={page} onClick={() => navigate(`/${page}`)}>
             <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
             </MenuItem>
         ))}
@@ -150,7 +150,7 @@ function ResponsiveAppBar() {
         {pages.map((page) => (
             <Button
             key={page}
-            onClick={handleCloseNavMenu}
+            onClick={() => navigate(`/${page}`)}
             sx={{ my: 2, color: 'white', display: 'block' }}
             >
             {page}
