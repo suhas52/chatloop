@@ -7,13 +7,14 @@ import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import CardActions from '@mui/joy/CardActions';
 import Typography from '@mui/joy/Typography';
+import WebsocketInput from "./websocketinput";
+
 
 
 function Messages({currentConvo}: any) {
     const context = useContext(UserContext);
     if (!context) throw new Error("UserContext not found");
     const { user } = context;
-    const [cursor, setCursor] = useState(null)
     const [messages, setMessages] = useState([    {
         msg_id: "",
         msg: "",
@@ -28,7 +29,7 @@ function Messages({currentConvo}: any) {
     useEffect(() => {
         async function getMessages() {
     
-            const response = await axios.get(`${BACKEND_URL}:${BACKEND_PORT}/api/user/messages/${currentConvo}`, {
+            const response = await axios.get(`${BACKEND_URL}:${BACKEND_PORT}/api/user/messages/${currentConvo.convo_id}`, {
                 withCredentials: true
             })
             if (response.data.legnth === 0) {
@@ -38,7 +39,9 @@ function Messages({currentConvo}: any) {
         }
         
         getMessages();
-    }, [currentConvo])
+
+        
+    }, [currentConvo.convo_id])
     
     return (
         <div>
@@ -53,7 +56,6 @@ function Messages({currentConvo}: any) {
             }}
             key={message.msg_id}
             >
-            
             <CardContent>
             <Typography level="title-lg">{message.msg}</Typography>
             <Typography level="title-sm">{message.sender_username}</Typography>
@@ -62,6 +64,9 @@ function Messages({currentConvo}: any) {
             </CardActions>
             </Card>
         })}
+        <WebsocketInput conversation_id={currentConvo.convo_id} 
+        sender_id={user?.user_id} 
+        receiver_id={user?.user_id === currentConvo.user1 ? currentConvo.user2 : currentConvo.user1}/>
         </div>
     )
 }

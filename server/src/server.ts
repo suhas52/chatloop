@@ -45,6 +45,7 @@ io.on('connection', (socket) => {
 
   
   socket.on('message', (data) => {
+    console.log(data)
     const {msg, conversation_id, receiver_id, sender_id} = data;
     sendMessage(msg, conversation_id, receiver_id, sender_id);
     io.to(data.conversation_id).emit('newMessage', data);

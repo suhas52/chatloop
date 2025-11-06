@@ -65,7 +65,7 @@ function CurrentConversations({setCurrentConvo}: any) {
             <Button variant="outlined" color="neutral">
             View
             </Button>
-            <Button variant="solid" color="primary" onClick={() => setCurrentConvo(convo.conversation_id)}>
+            <Button variant="solid" color="primary" onClick={() => setCurrentConvo({convo_id: convo.conversation_id, user1: convo.user1, user2: convo.user2})}>
             Text
             </Button>
             </CardActions>
