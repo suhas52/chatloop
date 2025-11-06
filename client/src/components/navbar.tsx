@@ -20,9 +20,10 @@ import { useNavigate } from 'react-router-dom';
 
 
 
+type Setting = 'profile' | 'account' | 'logout';
 
 const pages = ['users', "notifications"];
-const settings = ['Profile', 'Account', 'Logout'];
+const settings: Setting[] = ['profile', 'account', 'logout'];
 const BACKEND_URL = "http://localhost"
 const BACKEND_PORT = 3000
 
@@ -35,15 +36,25 @@ function ResponsiveAppBar() {
     if (!context) throw new Error("UserContext not found");
     const { user } = context;
     const navigate = useNavigate();
+    
+    const handlers: Record<Setting, () => void | Promise<void>> = {
+        logout: async () => {
+            console.log()
+            const res = await axios.post(`${BACKEND_URL}:${BACKEND_PORT}/api/auth/logout`, {}, {
+                withCredentials: true
+            })
+            if (res.status === 200) {
+                navigate('/login')
+            }
+        },
 
-    const handlelogOut = async () => {
-        console.log()
-        const res = await axios.post(`${BACKEND_URL}:${BACKEND_PORT}/api/auth/logout`, {}, {
-            withCredentials: true
-        })
-        if (res.status === 200) {
-            navigate('/login')
-        }
+        profile: () => {
+            navigate('/profile')
+        },
+
+        account: () => {
+            navigate('/accoutn')
+        } 
     }
     
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -180,7 +191,7 @@ function ResponsiveAppBar() {
         onClose={handleCloseUserMenu}
         >
         {settings.map((setting) => (
-            <MenuItem key={setting} onClick={setting === "Logout" ? handlelogOut : handleCloseNavMenu}>
+            <MenuItem key={setting} onClick={handlers[setting]}>
             <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
             </MenuItem>
         ))}

@@ -93,24 +93,42 @@ export const getConversations = async (user_id: string) => {
     
 }
 
-export const getMessages = async (conversation_id: string, myCursor: Date) => {
+export const getMessages = async (conversation_id: string) => {
     const messages = await prisma.messages.findMany({
-        where: {
-            conversation_id,
-            sent_at: { lt: myCursor },
-        },
         orderBy: { sent_at: 'desc' },
         take: 10,
+        where: {
+            conversation_id: conversation_id
+        },
         select: {
             msg_id: true,
             msg: true,
             sent_at: true,
             status: true,
             sender_id: true,
-            receiver_id: true
-        }
-    })
-    return messages
+            receiver_id: true,
+            users_messages_sender_idTousers: {
+                select: { username: true }
+            },
+            users_messages_receiver_idTousers: {
+                select: { username: true }
+            }
+            
+        },
+        
+    });
+    
+    const flattened = messages.map(m => ({
+        ...m,
+        sender_username: m.users_messages_sender_idTousers?.username || null,
+        receiver_username: m.users_messages_receiver_idTousers?.username || null,
+        users_messages_sender_idTousers: undefined,
+        users_messages_receiver_idTousers: undefined
+    }));
+    
+    
+    return flattened;
+    
 }
 
 export const startNewConversation = async (userA: string, userB: string) => {

@@ -11,7 +11,7 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 const BACKEND_URL = "http://localhost"
 const BACKEND_PORT = 3000
 
-function CurrentConversations() {
+function CurrentConversations({setCurrentConvo}: any) {
     
     const [allConvos, setAllConvos] = useState([{
         conversation_id: "",
@@ -65,7 +65,7 @@ function CurrentConversations() {
             <Button variant="outlined" color="neutral">
             View
             </Button>
-            <Button variant="solid" color="primary">
+            <Button variant="solid" color="primary" onClick={() => setCurrentConvo(convo.conversation_id)}>
             Text
             </Button>
             </CardActions>

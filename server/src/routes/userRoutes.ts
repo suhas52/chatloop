@@ -26,9 +26,9 @@ userRouter.get("/conversations/:id", verifyToken, async (req: any, res: Response
     }
 })
 
-userRouter.get("/messages/:id/:cursor", verifyToken, async (req: any, res: Response) => {
+userRouter.get("/messages/:id", verifyToken, async (req: any, res: Response) => {
     try { 
-        const messages = await getMessages(req.params.id, req.params.cursor)
+        const messages = await getMessages(req.params.id)
         res.status(200).json(messages)
     } catch (err) {
         console.log(err);
