@@ -1,64 +1,67 @@
-import React, { useState } from 'react';
-import { FaUserCircle } from 'react-icons/fa';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { ChangeEvent, useState } from 'react';
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+const BACKEND_URL = "http://localhost"
+const BACKEND_PORT = 3000
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    console.log('Username:', username);
-    console.log('Password:', password);
-  };
+function LoginPage() {
+    
+    const navigate = useNavigate();
+    
+    const [formData, setFormData] = useState({
+        username: "",
+        password: ""
+    }) 
+    
+    const handleChange = (event: ChangeEvent) => {
+        const element = event.target as HTMLInputElement
+        setFormData({
+            ...formData, [element.name]: element.value
+        })
+    }
+    
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        
+        axios.post(`${BACKEND_URL}:${BACKEND_PORT}/api/auth/login`, formData, {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+        })
+         .then(res => {
+            console.log(res.data)
+            navigate('/');
+            
+         })
+         .catch(err => {
+            console.log(err)
+         })
+        
+        setFormData({
+            username: "",
+            password: ""
+        })
+    }
+    
+    return <form onSubmit={handleSubmit}>
+    <Box padding={2}
+    display={'flex'} 
+    justifyContent={'center'} 
+    alignItems={'center'} 
+    flexDirection={'column'}
+    gap={1}
+    margin={2}
+    border={1}
+    borderRadius={2}>
+    
+    <TextField required onChange={handleChange} value={formData.username} name="username" label="Username" />
+    <TextField required type='password' onChange={handleChange} name="password" label="Password" />
+    <Button type='submit'>Submit</Button>
+    </Box>
+    </form>
+}
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
-      <div className="bg-white bg-opacity-90 backdrop-blur-md shadow-2xl rounded-xl p-10 w-full max-w-md animate-fade-in">
-        <div className="flex flex-col items-center mb-6">
-          <FaUserCircle className="text-5xl text-indigo-600 mb-2" />
-          <h2 className="text-2xl font-bold text-gray-800">Sign In</h2>
-          <p className="text-sm text-gray-500">Welcome back! Please enter your credentials.</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-              Username
-            </label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200"
-          >
-            Log In
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-};
-
-export default Login;
+export default LoginPage

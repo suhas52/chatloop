@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,14 +13,38 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import Stack from '@mui/material/Stack';
+import { useContext, useState } from 'react';
+import { UserContext } from './userContext';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
+
+const pages = ['Users', "Notifications"];
+const settings = ['Profile', 'Account', 'Logout'];
+const BACKEND_URL = "http://localhost"
+const BACKEND_PORT = 3000
+
+
 
 function ResponsiveAppBar() {
-    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+    const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+    const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+    const context = useContext(UserContext);
+    if (!context) throw new Error("UserContext not found");
+    const { user } = context;
+    const navigate = useNavigate();
+
+    const handlelogOut = async () => {
+        console.log()
+        const res = await axios.post(`${BACKEND_URL}:${BACKEND_PORT}/api/auth/logout`, {}, {
+            withCredentials: true
+        })
+        if (res.status === 200) {
+            navigate('/login')
+        }
+    }
     
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -46,7 +70,7 @@ function ResponsiveAppBar() {
         variant="h6"
         noWrap
         component="a"
-        href="#app-bar-with-responsive-menu"
+        href="/"
         sx={{
             mr: 2,
             display: { xs: 'none', md: 'flex' },
@@ -113,15 +137,15 @@ function ResponsiveAppBar() {
         >
         LOGO
         </Typography>
-        {true && <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: "flex-end"}}>
+        {!user && <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: "flex-end"}}>
         <Stack spacing={2} direction="row">
-        <Button variant="contained">Login</Button>
-        <Button variant="contained">Register</Button>
+        <Button href="/login" variant="contained">Login</Button>
+        <Button href="/register" variant="contained">Register</Button>
         </Stack>
         </Box>
     }
     
-    {false && <>
+    {user && <>
         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
         {pages.map((page) => (
             <Button
@@ -136,7 +160,7 @@ function ResponsiveAppBar() {
         <Box sx={{ flexGrow: 0 }}>
         <Tooltip title="Open settings">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-        <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+        <Avatar alt="Remy Sharp" src="#" />
         </IconButton>
         </Tooltip>
         <Menu
@@ -156,7 +180,7 @@ function ResponsiveAppBar() {
         onClose={handleCloseUserMenu}
         >
         {settings.map((setting) => (
-            <MenuItem key={setting} onClick={handleCloseUserMenu}>
+            <MenuItem key={setting} onClick={setting === "Logout" ? handlelogOut : handleCloseNavMenu}>
             <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
             </MenuItem>
         ))}

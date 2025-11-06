@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import './App.css'
 import ResponsiveAppBar from './components/navbar'
-import { Routes } from 'react-router-dom'
-import Login from './components/login'
+import { Route, Routes } from 'react-router-dom'
+import LoginPage from './components/login'
+import RegisterPage from './components/register'
+import Home from './components/home'
+
 
 
 function App() {
@@ -10,9 +13,10 @@ function App() {
   return (
     <>
     <ResponsiveAppBar />
-    <Login />
     <Routes>
-    
+    <Route path='/' element={<Home />} />
+    <Route path="/login" element={<LoginPage />} />
+    <Route path="/register" element={<RegisterPage />} />
     </Routes>
     </>
   )
